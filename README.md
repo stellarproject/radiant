@@ -17,7 +17,7 @@ Or via code:
 ```go
 // create config
 cfg := &blackbird.Config{
-	GRPCAddr:  "127.0.0.1:9000",
+	GRPCAddr:  "unix:///run/blackbird.sock",
 	HTTPPort:  80,
 	HTTPSPort: 443,
 	Debug:     true,
@@ -37,7 +37,7 @@ This will start both the proxy and GRPC servers.
 There is a Go client available to assist in usage:
 
 ```go
-client, _ := blackbird.NewClient("127.0.0.1:9000")
+client, _ := blackbird.NewClient("unix:///run/blackbird.sock")
 
 timeout := time.Second * 30
 upstreams := []string{
