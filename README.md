@@ -1,7 +1,7 @@
 ![Blackbird](docs/blackbird.png)
 
 # Blackbird
-Blackbird is a GRPC proxy service using (Caddy)[https://caddyserver.com].
+Blackbird is a GRPC proxy service using [Caddy](https://caddyserver.com).
 
 Blackbird uses a datastore to store server info.  By default, there is a simple in-memory datastore.  You can implement whatever you want to integrate with external systems.
 
