@@ -25,6 +25,11 @@ func main() {
 			Usage: "Enable debug logging",
 		},
 		cli.StringFlag{
+			Name:  "datastore, d",
+			Usage: "datastore backend",
+			Value: "memory://",
+		},
+		cli.StringFlag{
 			Name:  "grpc-addr, g",
 			Usage: "grpc listen address",
 			Value: "127.0.0.1:9000",
@@ -56,10 +61,11 @@ func main() {
 
 func start(ctx *cli.Context) error {
 	cfg := &blackbird.Config{
-		GRPCAddr:  ctx.String("grpc-addr"),
-		HTTPPort:  ctx.Int("http-port"),
-		HTTPSPort: ctx.Int("https-port"),
-		Debug:     ctx.Bool("debug"),
+		GRPCAddr:     ctx.String("grpc-addr"),
+		DatastoreUri: ctx.String("datastore"),
+		HTTPPort:     ctx.Int("http-port"),
+		HTTPSPort:    ctx.Int("https-port"),
+		Debug:        ctx.Bool("debug"),
 	}
 
 	srv, err := server.NewServer(cfg)

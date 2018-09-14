@@ -4,6 +4,7 @@ COMMIT=`git rev-parse --short HEAD`
 NAMESPACE?=ehazlett
 IMAGE_NAMESPACE?=$(NAMESPACE)
 APP=blackbird
+CLI=bctl
 REPO?=$(NAMESPACE)/$(APP)
 TAG?=dev
 BUILD?=-dev
@@ -35,7 +36,7 @@ docker-build: bindir
 	@docker run --rm -e GOOS=${GOOS} -e GOARCH=${GOARCH} -w /go/src/github.com/$(NAMESPACE)/$(APP) $(APP)-dev sh -c "make cli daemon cni-ipam; tar -C ./bin -cf - ." | tar -C ./bin -xf -
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
-binaries: daemon
+binaries: daemon cli
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
 bindir:
@@ -43,6 +44,9 @@ bindir:
 
 daemon: bindir
 	@cd cmd/$(APP) && CGO_ENABLED=0 go build -installsuffix cgo -ldflags "-w -X github.com/$(REPO)/version.GitCommit=$(COMMIT) -X github.com/$(REPO)/version.Build=$(BUILD)" -o ../../bin/$(APP) .
+
+cli: bindir
+	@cd cmd/$(CLI) && CGO_ENABLED=0 go build -installsuffix cgo -ldflags "-w -X github.com/$(REPO)/version.GitCommit=$(COMMIT) -X github.com/$(REPO)/version.Build=$(BUILD)" -o ../../bin/$(CLI) .
 
 docs:
 	@docker build -t $(APP)-docs -f Dockerfile.docs .
