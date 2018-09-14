@@ -3,6 +3,8 @@ package server
 import (
 	"fmt"
 	"net"
+	"net/url"
+	"os"
 
 	"github.com/ehazlett/blackbird"
 	api "github.com/ehazlett/blackbird/api/v1"
@@ -24,9 +26,7 @@ type Server struct {
 	config     *blackbird.Config
 	grpcServer *grpc.Server
 	instance   *caddy.Instance
-	// TODO: replace with interface to store in remote datastore
-	servers   map[string]*api.Server
-	datastore ds.Datastore
+	datastore  ds.Datastore
 }
 
 func NewServer(cfg *blackbird.Config, datastore ds.Datastore) (*Server, error) {
@@ -34,7 +34,6 @@ func NewServer(cfg *blackbird.Config, datastore ds.Datastore) (*Server, error) {
 	srv := &Server{
 		config:     cfg,
 		grpcServer: grpcServer,
-		servers:    make(map[string]*api.Server),
 		datastore:  datastore,
 	}
 
@@ -56,11 +55,13 @@ func NewServer(cfg *blackbird.Config, datastore ds.Datastore) (*Server, error) {
 
 func (s *Server) Run() error {
 	// start grpc
-	l, err := net.Listen("tcp", s.config.GRPCAddr)
+	l, err := getGRPCListener(s.config.GRPCAddr)
 	if err != nil {
 		return err
 	}
-
+	logrus.WithFields(logrus.Fields{
+		"addr": s.config.GRPCAddr,
+	}).Debug("starting grpc listener")
 	go s.grpcServer.Serve(l)
 
 	caddy.SetDefaultCaddyfileLoader("default", caddy.LoaderFunc(s.defaultLoader))
@@ -76,9 +77,34 @@ func (s *Server) Run() error {
 	logrus.WithFields(logrus.Fields{
 		"name":    version.Name,
 		"version": version.BuildVersion(),
+		"http":    s.config.HTTPPort,
+		"https":   s.config.HTTPSPort,
 	}).Info("server started")
 
 	return nil
+}
+
+func (s *Server) Stop() error {
+	s.grpcServer.Stop()
+	return nil
+}
+
+func getGRPCListener(uri string) (net.Listener, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+	switch u.Scheme {
+	case "tcp":
+		return net.Listen("tcp", u.Host)
+	case "unix":
+		if _, err := os.Stat(u.Path); err == nil {
+			os.Remove(u.Path)
+		}
+		return net.Listen("unix", u.Path)
+	default:
+		return nil, fmt.Errorf("unsupported listener scheme %s (supported are tcp:// and unix://)", u.Scheme)
+	}
 }
 
 func (s *Server) defaultLoader(serverType string) (caddy.Input, error) {

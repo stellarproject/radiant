@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strings"
+	"text/tabwriter"
 
 	"github.com/codegangsta/cli"
 	"github.com/ehazlett/blackbird"
@@ -14,7 +17,6 @@ var serversCommand = cli.Command{
 		addServerCommand,
 		removeServerCommand,
 		listServersCommand,
-		reloadCommand,
 	},
 }
 
@@ -117,22 +119,14 @@ func listServers(ctx *cli.Context) error {
 		return err
 	}
 
-	fmt.Println(servers)
+	w := tabwriter.NewWriter(os.Stdout, 20, 1, 3, ' ', 0)
+	fmt.Fprintf(w, "HOST\tPATH\tTIMEOUTS\tUPSTREAMS\n")
+	for _, s := range servers {
+		ups := strings.Join(s.Upstreams, ", ")
+		fmt.Fprintf(w, "%s\t%s\t%s\t%s\n", s.Host, s.Path, s.Timeouts, ups)
+
+	}
+	w.Flush()
 
 	return nil
-}
-
-var reloadCommand = cli.Command{
-	Name:   "reload",
-	Usage:  "reload proxy service",
-	Action: reload,
-}
-
-func reload(ctx *cli.Context) error {
-	client, err := getClient(ctx)
-	if err != nil {
-		return err
-	}
-	defer client.Close()
-	return client.Reload()
 }

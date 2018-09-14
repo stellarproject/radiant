@@ -6,7 +6,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/ehazlett/blackbird"
 	"github.com/ehazlett/blackbird/version"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -24,25 +24,41 @@ func main() {
 		cli.StringFlag{
 			Name:  "addr, a",
 			Usage: "blackbird grpc address",
-			Value: "127.0.0.1:9000",
+			Value: "unix:///run/blackbird.sock",
 		},
 	}
 	app.Commands = []cli.Command{
 		serversCommand,
+		reloadCommand,
 	}
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.Bool("debug") {
-			log.SetLevel(log.DebugLevel)
+			logrus.SetLevel(logrus.DebugLevel)
 		}
 
 		return nil
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }
 
 func getClient(ctx *cli.Context) (*blackbird.Client, error) {
 	return blackbird.NewClient(ctx.GlobalString("addr"))
+}
+
+var reloadCommand = cli.Command{
+	Name:   "reload",
+	Usage:  "reload proxy service",
+	Action: reload,
+}
+
+func reload(ctx *cli.Context) error {
+	client, err := getClient(ctx)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+	return client.Reload()
 }

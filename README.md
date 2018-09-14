@@ -45,8 +45,8 @@ upstreams := []string{
     "http://5.6.7.8",
 }
 opts := []blackbird.AddOpts{
-	blackbird.WithUpstreams(upstreams...),
-	blackbird.WithTimeouts(timeout),
+    blackbird.WithUpstreams(upstreams...),
+    blackbird.WithTimeouts(timeout),
     blackbird.WithTLS,
 }
 

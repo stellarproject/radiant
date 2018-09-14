@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,7 +11,7 @@ import (
 	"github.com/ehazlett/blackbird/ds/memory"
 	"github.com/ehazlett/blackbird/server"
 	"github.com/ehazlett/blackbird/version"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 		cli.StringFlag{
 			Name:  "grpc-addr, g",
 			Usage: "grpc listen address",
-			Value: "127.0.0.1:9000",
+			Value: "unix:///run/blackbird.sock",
 		},
 		cli.IntFlag{
 			Name:  "http-port",
@@ -44,7 +45,7 @@ func main() {
 	app.Action = start
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.Bool("debug") {
-			log.SetLevel(log.DebugLevel)
+			logrus.SetLevel(logrus.DebugLevel)
 		}
 
 		return nil
@@ -81,6 +82,10 @@ func start(ctx *cli.Context) error {
 
 	go func() {
 		<-signals
+		logrus.Info("shutting down")
+		if err := srv.Stop(); err != nil {
+			logrus.Error(err)
+		}
 		done <- true
 	}()
 

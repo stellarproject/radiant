@@ -2,6 +2,7 @@ package blackbird
 
 import (
 	"context"
+	"net/url"
 	"time"
 
 	api "github.com/ehazlett/blackbird/api/v1"
@@ -18,10 +19,14 @@ type Client struct {
 }
 
 func NewClient(addr string) (*Client, error) {
+	grpcAddr, err := getGRPCAddr(addr)
+	if err != nil {
+		return nil, err
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
 	c, err := grpc.DialContext(ctx,
-		addr,
+		grpcAddr,
 		grpc.WithInsecure(),
 		grpc.WithWaitForHandshake(),
 	)
@@ -95,4 +100,18 @@ func (c *Client) Reload() error {
 
 func (c *Client) Close() {
 	c.conn.Close()
+}
+
+func getGRPCAddr(uri string) (string, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return "", err
+	}
+
+	switch u.Scheme {
+	case "unix":
+		return "passthrough:///" + uri, nil
+	default:
+		return u.Host, nil
+	}
 }
