@@ -98,6 +98,18 @@ func (c *Client) Reload() error {
 	return nil
 }
 
+func (c *Client) Config() ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	resp, err := c.proxyService.Config(ctx, &api.ConfigRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Data, nil
+}
+
 func (c *Client) Close() {
 	c.conn.Close()
 }

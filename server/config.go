@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"context"
 	"strings"
 	"text/template"
 	"time"
@@ -26,7 +27,7 @@ const (
 	{{ range $upstream := $server.Upstreams }}upstream {{ $upstream }}
 	{{ end }}
     }
-    {{ with $t := $server.Timeouts }} {{ if $t }}timeouts {{duration $t }} {{ end }} {{ end }}
+    {{ with $t := $server.Timeouts }}{{ if $t }}timeouts {{duration $t }} {{ end }} {{ end }}
 }{{ end }}
 `
 )
@@ -35,6 +36,13 @@ type proxyConfig struct {
 	HTTPPort  int
 	HTTPSPort int
 	Servers   []*api.Server
+}
+
+func (s *Server) Config(ctx context.Context, req *api.ConfigRequest) (*api.ConfigResponse, error) {
+	cf := s.instance.Caddyfile()
+	return &api.ConfigResponse{
+		Data: cf.Body(),
+	}, nil
 }
 
 func policyName(v api.Policy) string {

@@ -16,6 +16,7 @@ func (s *Server) Reload(ctx context.Context, req *api.ReloadRequest) (*ptypes.Em
 
 	s.instance, err = s.instance.Restart(caddyfile)
 	if err != nil {
+		logrus.Error(string(caddyfile.Body()))
 		return empty, err
 	}
 

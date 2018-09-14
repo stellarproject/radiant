@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/codegangsta/cli"
@@ -30,6 +31,7 @@ func main() {
 	app.Commands = []cli.Command{
 		serversCommand,
 		reloadCommand,
+		configCommand,
 	}
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.Bool("debug") {
@@ -61,4 +63,24 @@ func reload(ctx *cli.Context) error {
 	}
 	defer client.Close()
 	return client.Reload()
+}
+
+var configCommand = cli.Command{
+	Name:   "config",
+	Usage:  "get current proxy config",
+	Action: config,
+}
+
+func config(ctx *cli.Context) error {
+	client, err := getClient(ctx)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+	data, err := client.Config()
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(data))
+	return nil
 }

@@ -13,6 +13,7 @@ service Proxy {
   rpc RemoveServer(RemoveServerRequest) returns (google.protobuf.Empty);
   rpc Servers(ServersRequest) returns (ServersResponse);
   rpc Reload(ReloadRequest) returns (google.protobuf.Empty);
+  rpc Config(ConfigRequest) returns (ConfigResponse);
 }
 
 enum Policy {
@@ -57,4 +58,10 @@ message ServersRequest {}
 
 message ServersResponse {
   repeated Server servers = 1;
+}
+
+message ConfigRequest {}
+
+message ConfigResponse {
+  bytes data = 1;
 }
