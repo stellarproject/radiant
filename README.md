@@ -12,35 +12,55 @@ To start the server, run:
 $> blackbird
 ```
 
+Or via code:
+
+```go
+// create config
+cfg := &blackbird.Config{
+	GRPCAddr:  "127.0.0.1:9000",
+	HTTPPort:  80,
+	HTTPSPort: 443,
+	Debug:     true,
+}
+// instantiate a datastore
+memDs := memory.NewMemory()
+
+// create the server
+srv, _ := server.NewServer(cfg, memDs)
+
+// run the server
+_ = srv.Run()
+```
+
 This will start both the proxy and GRPC servers.
 
 There is a Go client available to assist in usage:
 
 ```go
-    client, _ := blackbird.NewClient(addr)
+client, _ := blackbird.NewClient("127.0.0.1:9000")
 
-    timeout := time.Second * 30
-    upstreams := []string{
-        "http://1.2.3.4",
-        "http://5.6.7.8",
-    }
-    opts := []blackbird.AddOpts{
-    	blackbird.WithUpstreams(upstreams...),
-    	blackbird.WithTimeouts(timeout),
-        blackbird.WithTLS,
-    }
+timeout := time.Second * 30
+upstreams := []string{
+    "http://1.2.3.4",
+    "http://5.6.7.8",
+}
+opts := []blackbird.AddOpts{
+	blackbird.WithUpstreams(upstreams...),
+	blackbird.WithTimeouts(timeout),
+    blackbird.WithTLS,
+}
 
-    // add the server
-    _ = client.AddServer(host, opts...)
+// add the server
+_ = client.AddServer(host, opts...)
 
-    // reload the proxy to take effect
-    _ = client.Reload()
+// reload the proxy to take effect
+_ = client.Reload()
 
-    // remove the server
-    _ = client.RemoveServer(host)
+// remove the server
+_ = client.RemoveServer(host)
 
-    // reload to take effect
-    _ = client.Reload()
+// reload to take effect
+_ = client.Reload()
 ```
 It is safe to reload as often as you wish.  There is zero downtime for the reload operation.
 

@@ -32,6 +32,11 @@ var addServerCommand = cli.Command{
 			Usage: "server upstreams",
 			Value: &cli.StringSlice{},
 		},
+		cli.StringFlag{
+			Name:  "path",
+			Usage: "path prefix for server",
+			Value: "/",
+		},
 		cli.DurationFlag{
 			Name:  "timeouts",
 			Usage: "server timeouts",
@@ -53,6 +58,7 @@ func addServer(ctx *cli.Context) error {
 	host := ctx.String("host")
 	upstreams := ctx.StringSlice("upstream")
 	opts := []blackbird.AddOpts{
+		blackbird.WithPath(ctx.String("path")),
 		blackbird.WithUpstreams(upstreams...),
 		blackbird.WithTimeouts(ctx.Duration("timeout")),
 	}

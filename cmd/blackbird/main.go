@@ -7,6 +7,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/ehazlett/blackbird"
+	"github.com/ehazlett/blackbird/ds/memory"
 	"github.com/ehazlett/blackbird/server"
 	"github.com/ehazlett/blackbird/version"
 	log "github.com/sirupsen/logrus"
@@ -23,11 +24,6 @@ func main() {
 		cli.BoolFlag{
 			Name:  "debug, D",
 			Usage: "Enable debug logging",
-		},
-		cli.StringFlag{
-			Name:  "datastore, d",
-			Usage: "datastore backend",
-			Value: "memory://",
 		},
 		cli.StringFlag{
 			Name:  "grpc-addr, g",
@@ -61,14 +57,15 @@ func main() {
 
 func start(ctx *cli.Context) error {
 	cfg := &blackbird.Config{
-		GRPCAddr:     ctx.String("grpc-addr"),
-		DatastoreUri: ctx.String("datastore"),
-		HTTPPort:     ctx.Int("http-port"),
-		HTTPSPort:    ctx.Int("https-port"),
-		Debug:        ctx.Bool("debug"),
+		GRPCAddr:  ctx.String("grpc-addr"),
+		HTTPPort:  ctx.Int("http-port"),
+		HTTPSPort: ctx.Int("https-port"),
+		Debug:     ctx.Bool("debug"),
 	}
 
-	srv, err := server.NewServer(cfg)
+	memDs := memory.NewMemory()
+
+	srv, err := server.NewServer(cfg, memDs)
 	if err != nil {
 		return err
 	}

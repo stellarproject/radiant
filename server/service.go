@@ -29,19 +29,14 @@ type Server struct {
 	datastore ds.Datastore
 }
 
-func NewServer(cfg *blackbird.Config) (*Server, error) {
+func NewServer(cfg *blackbird.Config, datastore ds.Datastore) (*Server, error) {
 	grpcServer := grpc.NewServer()
 	srv := &Server{
 		config:     cfg,
 		grpcServer: grpcServer,
 		servers:    make(map[string]*api.Server),
+		datastore:  datastore,
 	}
-
-	datastore, err := getDatastore(cfg.DatastoreUri)
-	if err != nil {
-		return nil, err
-	}
-	srv.datastore = datastore
 
 	logrus.WithFields(logrus.Fields{
 		"type": datastore.Name(),
