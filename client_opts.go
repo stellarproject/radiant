@@ -53,3 +53,10 @@ func WithPreset(preset string) AddOpts {
 		return nil
 	}
 }
+
+func WithServer(s *api.Server) AddOpts {
+	return func(ctx context.Context, srv *api.Server) error {
+		srv = s
+		return nil
+	}
+}

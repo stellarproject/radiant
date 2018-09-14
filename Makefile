@@ -21,6 +21,8 @@ deps:
 	@vndr $(VNDR_ARGS)
 deps-init:
 	@vndr $(VNDR_ARGS) init
+	# fixup
+	@rm -rf vendor/github.com/gogo/protobuf/.git
 
 generate:
 	@echo ${PACKAGES} | xargs protobuild -quiet
