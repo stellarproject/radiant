@@ -14,7 +14,7 @@ EXTENSIONS=$(wildcard extensions/*)
 CYCLO_PACKAGES=$(shell go list ./... | grep -v /vendor/ | sed "s/github.com\/$(NAMESPACE)\/$(APP)\///g" | tail -n +2)
 CWD=$(PWD)
 
-all: binaries
+all: deps binaries
 
 deps:
 	@dep ensure
@@ -33,7 +33,7 @@ docker-build: bindir
 	@docker run --rm -e GOOS=${GOOS} -e GOARCH=${GOARCH} -w /go/src/github.com/$(NAMESPACE)/$(APP) $(APP)-dev sh -c "make cli daemon cni-ipam; tar -C ./bin -cf - ." | tar -C ./bin -xf -
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
-binaries: deps daemon cli
+binaries: daemon cli
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
 bindir:
