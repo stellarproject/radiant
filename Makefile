@@ -13,16 +13,11 @@ PACKAGES=$(shell go list ./... | grep -v -e /vendor/)
 EXTENSIONS=$(wildcard extensions/*)
 CYCLO_PACKAGES=$(shell go list ./... | grep -v /vendor/ | sed "s/github.com\/$(NAMESPACE)\/$(APP)\///g" | tail -n +2)
 CWD=$(PWD)
-VNDR_ARGS=-whitelist github.com/gogo/protobuf -whitelist github.com/xenolf/lego -whitelist gopkg.in/square -whitelist github.com/mholt/caddy
 
 all: binaries
 
 deps:
-	@vndr $(VNDR_ARGS)
-deps-init:
-	@vndr $(VNDR_ARGS) init
-	# fixup
-	@rm -rf vendor/github.com/gogo/protobuf/.git
+	@dep ensure
 
 generate:
 	@echo ${PACKAGES} | xargs protobuild -quiet
@@ -39,6 +34,7 @@ docker-build: bindir
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
 binaries: daemon cli
+	@dep ensure
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
 bindir:
