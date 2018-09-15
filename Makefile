@@ -12,12 +12,13 @@ BUILD_ARGS?=
 PACKAGES=$(shell go list ./... | grep -v -e /vendor/)
 EXTENSIONS=$(wildcard extensions/*)
 CYCLO_PACKAGES=$(shell go list ./... | grep -v /vendor/ | sed "s/github.com\/$(NAMESPACE)\/$(APP)\///g" | tail -n +2)
+VNDR_ARGS=-whitelist github.com/mholt/caddy
 CWD=$(PWD)
 
 all: binaries
 
 deps:
-	@dep ensure
+	@vndr $(VNDR_ARGS)
 
 generate:
 	@echo ${PACKAGES} | xargs protobuild -quiet
@@ -34,7 +35,6 @@ docker-build: bindir
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
 binaries: daemon cli
-	@dep ensure
 	@echo " -> Built $(TAG) version ${COMMIT} (${GOOS}/${GOARCH})"
 
 bindir:
