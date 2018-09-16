@@ -24,20 +24,12 @@ var (
 
 const defaultResolvConf = "/etc/resolv.conf"
 
-const (
-	// DefaultPropagationTimeout default propagation timeout
-	DefaultPropagationTimeout = 60 * time.Second
-
-	// DefaultPollingInterval default polling interval
-	DefaultPollingInterval = 2 * time.Second
-)
-
 var defaultNameservers = []string{
 	"google-public-dns-a.google.com:53",
 	"google-public-dns-b.google.com:53",
 }
 
-// RecursiveNameservers are used to pre-check DNS propagation
+// RecursiveNameservers are used to pre-check DNS propagations
 var RecursiveNameservers = getNameservers(defaultResolvConf, defaultNameservers)
 
 // DNSTimeout is used to override the default DNS timeout of 10 seconds.
@@ -79,13 +71,11 @@ type dnsChallenge struct {
 	provider ChallengeProvider
 }
 
-// PreSolve just submits the txt record to the dns provider. It does not validate record propagation, or
-// do anything at all with the acme server.
-func (s *dnsChallenge) PreSolve(chlng challenge, domain string) error {
-	log.Infof("[%s] acme: Preparing to solve DNS-01", domain)
+func (s *dnsChallenge) Solve(chlng challenge, domain string) error {
+	log.Printf("[INFO][%s] acme: Trying to solve DNS-01", domain)
 
 	if s.provider == nil {
-		return errors.New("no DNS Provider configured")
+		return errors.New("No DNS Provider configured")
 	}
 
 	// Generate the Key Authorization for the challenge
@@ -96,31 +86,25 @@ func (s *dnsChallenge) PreSolve(chlng challenge, domain string) error {
 
 	err = s.provider.Present(domain, chlng.Token, keyAuth)
 	if err != nil {
-		return fmt.Errorf("error presenting token: %s", err)
+		return fmt.Errorf("Error presenting token: %s", err)
 	}
-
-	return nil
-}
-
-func (s *dnsChallenge) Solve(chlng challenge, domain string) error {
-	log.Infof("[%s] acme: Trying to solve DNS-01", domain)
-
-	// Generate the Key Authorization for the challenge
-	keyAuth, err := getKeyAuthorization(chlng.Token, s.jws.privKey)
-	if err != nil {
-		return err
-	}
+	defer func() {
+		err := s.provider.CleanUp(domain, chlng.Token, keyAuth)
+		if err != nil {
+			log.Printf("Error cleaning up %s: %v ", domain, err)
+		}
+	}()
 
 	fqdn, value, _ := DNS01Record(domain, keyAuth)
 
-	log.Infof("[%s] Checking DNS record propagation using %+v", domain, RecursiveNameservers)
+	log.Printf("[INFO][%s] Checking DNS record propagation using %+v", domain, RecursiveNameservers)
 
 	var timeout, interval time.Duration
 	switch provider := s.provider.(type) {
 	case ChallengeProviderTimeout:
 		timeout, interval = provider.Timeout()
 	default:
-		timeout, interval = DefaultPropagationTimeout, DefaultPollingInterval
+		timeout, interval = 60*time.Second, 2*time.Second
 	}
 
 	err = WaitFor(timeout, interval, func() (bool, error) {
@@ -131,15 +115,6 @@ func (s *dnsChallenge) Solve(chlng challenge, domain string) error {
 	}
 
 	return s.validate(s.jws, domain, chlng.URL, challenge{Type: chlng.Type, Token: chlng.Token, KeyAuthorization: keyAuth})
-}
-
-// CleanUp cleans the challenge
-func (s *dnsChallenge) CleanUp(chlng challenge, domain string) error {
-	keyAuth, err := getKeyAuthorization(chlng.Token, s.jws.privKey)
-	if err != nil {
-		return err
-	}
-	return s.provider.CleanUp(domain, chlng.Token, keyAuth)
 }
 
 // checkDNSPropagation checks if the expected TXT record has been propagated to all authoritative nameservers.
@@ -235,7 +210,7 @@ func lookupNameservers(fqdn string) ([]string, error) {
 
 	zone, err := FindZoneByFqdn(fqdn, RecursiveNameservers)
 	if err != nil {
-		return nil, fmt.Errorf("could not determine the zone: %v", err)
+		return nil, fmt.Errorf("Could not determine the zone: %v", err)
 	}
 
 	r, err := dnsQuery(zone, dns.TypeNS, RecursiveNameservers, true)
@@ -252,7 +227,7 @@ func lookupNameservers(fqdn string) ([]string, error) {
 	if len(authoritativeNss) > 0 {
 		return authoritativeNss, nil
 	}
-	return nil, fmt.Errorf("could not determine authoritative nameservers")
+	return nil, fmt.Errorf("Could not determine authoritative nameservers")
 }
 
 // FindZoneByFqdn determines the zone apex for the given fqdn by recursing up the
@@ -274,7 +249,7 @@ func FindZoneByFqdn(fqdn string, nameservers []string) (string, error) {
 
 		// Any response code other than NOERROR and NXDOMAIN is treated as error
 		if in.Rcode != dns.RcodeNameError && in.Rcode != dns.RcodeSuccess {
-			return "", fmt.Errorf("unexpected response code '%s' for %s",
+			return "", fmt.Errorf("Unexpected response code '%s' for %s",
 				dns.RcodeToString[in.Rcode], domain)
 		}
 
@@ -297,7 +272,7 @@ func FindZoneByFqdn(fqdn string, nameservers []string) (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("could not find the start of authority")
+	return "", fmt.Errorf("Could not find the start of authority")
 }
 
 // dnsMsgContainsCNAME checks for a CNAME answer in msg
