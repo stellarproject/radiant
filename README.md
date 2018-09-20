@@ -1,4 +1,4 @@
-![Radiant](radiant.png)
+![Radiant](radiant.jpg)
 
 [Photo by Jakub Novacek on Pexels](https://www.pexels.com/photo/time-lapse-photo-of-stars-on-night-924824/)
 
