@@ -1,10 +1,10 @@
 GOOS?=linux
 GOARCH?=amd64
 COMMIT=`git rev-parse --short HEAD`
-NAMESPACE?=ehazlett
+NAMESPACE?=stellarproject
 IMAGE_NAMESPACE?=$(NAMESPACE)
-APP=blackbird
-CLI=bctl
+APP=radiant
+CLI=rctl
 REPO?=$(NAMESPACE)/$(APP)
 TAG?=dev
 BUILD?=-dev

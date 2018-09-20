@@ -5,16 +5,16 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/ehazlett/blackbird"
-	"github.com/ehazlett/blackbird/version"
 	"github.com/sirupsen/logrus"
+	"github.com/stellarproject/radiant"
+	"github.com/stellarproject/radiant/version"
 )
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "bctl"
 	app.Version = version.BuildVersion()
-	app.Author = "@ehazlett"
+	app.Author = "@stellarproject"
 	app.Email = ""
 	app.Usage = version.Description
 	app.Flags = []cli.Flag{
@@ -24,8 +24,8 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:  "addr, a",
-			Usage: "blackbird grpc address",
-			Value: "unix:///run/blackbird.sock",
+			Usage: "radiant grpc address",
+			Value: "unix:///run/radiant.sock",
 		},
 	}
 	app.Commands = []cli.Command{
@@ -46,8 +46,8 @@ func main() {
 	}
 }
 
-func getClient(ctx *cli.Context) (*blackbird.Client, error) {
-	return blackbird.NewClient(ctx.GlobalString("addr"))
+func getClient(ctx *cli.Context) (*radiant.Client, error) {
+	return radiant.NewClient(ctx.GlobalString("addr"))
 }
 
 var reloadCommand = cli.Command{

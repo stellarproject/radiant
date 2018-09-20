@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
-	api "github.com/ehazlett/blackbird/api/v1"
 	ptypes "github.com/gogo/protobuf/types"
+	api "github.com/stellarproject/radiant/api/v1"
 )
 
 func (s *Server) RemoveServer(ctx context.Context, req *api.RemoveServerRequest) (*ptypes.Empty, error) {

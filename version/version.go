@@ -4,7 +4,7 @@ import "runtime"
 
 var (
 	// Name is the name of the application
-	Name = "blackbird"
+	Name = "radiant"
 
 	// Version defines the application version
 	Version = "0.1.0"

@@ -1,11 +1,11 @@
-package blackbird
+package radiant
 
 import (
 	"context"
 	"net/url"
 	"time"
 
-	api "github.com/ehazlett/blackbird/api/v1"
+	api "github.com/stellarproject/radiant/api/v1"
 	"google.golang.org/grpc"
 )
 

@@ -17,9 +17,9 @@ RUN go get -v github.com/gogo/protobuf/protoc-gen-gogo
 RUN go get -v github.com/gogo/protobuf/protoc-gen-gogofast
 RUN go get -v github.com/stevvooe/protobuild
 RUN go get -v github.com/golang/lint/golint
-WORKDIR /go/src/github.com/ehazlett/blackbird
-COPY . /go/src/github.com/ehazlett/blackbird
+WORKDIR /go/src/github.com/stellarproject/radiant
+COPY . /go/src/github.com/stellarproject/radiant
 RUN make
 
 FROM scratch
-COPY --from=build /go/src/github.com/ehazlett/blackbird/bin/* /bin/
+COPY --from=build /go/src/github.com/stellarproject/radiant/bin/* /bin/

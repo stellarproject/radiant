@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package blackbird.api.v1;
+package io.stellarproject.radiant.api.v1;
 
 import "gogoproto/gogo.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/duration.proto";
 
-option go_package = "github.com/ehazlett/blackbird/api/v1;api";
+option go_package = "github.com/stellarproject/radiant/api/v1;api";
 
 service Proxy {
   rpc AddServer(AddServerRequest) returns (google.protobuf.Empty);

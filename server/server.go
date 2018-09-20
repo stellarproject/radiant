@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	api "github.com/ehazlett/blackbird/api/v1"
+	api "github.com/stellarproject/radiant/api/v1"
 )
 
 func (s *Server) Servers(ctx context.Context, req *api.ServersRequest) (*api.ServersResponse, error) {

@@ -1,6 +1,6 @@
 package ds
 
-import api "github.com/ehazlett/blackbird/api/v1"
+import api "github.com/stellarproject/radiant/api/v1"
 
 type Datastore interface {
 	// Name returns the name of the datastore

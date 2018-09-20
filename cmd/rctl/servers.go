@@ -7,7 +7,7 @@ import (
 	"text/tabwriter"
 
 	"github.com/codegangsta/cli"
-	"github.com/ehazlett/blackbird"
+	"github.com/stellarproject/radiant"
 )
 
 var serversCommand = cli.Command{
@@ -59,13 +59,13 @@ func addServer(ctx *cli.Context) error {
 
 	host := ctx.String("host")
 	upstreams := ctx.StringSlice("upstream")
-	opts := []blackbird.AddOpts{
-		blackbird.WithPath(ctx.String("path")),
-		blackbird.WithUpstreams(upstreams...),
-		blackbird.WithTimeouts(ctx.Duration("timeout")),
+	opts := []radiant.AddOpts{
+		radiant.WithPath(ctx.String("path")),
+		radiant.WithUpstreams(upstreams...),
+		radiant.WithTimeouts(ctx.Duration("timeout")),
 	}
 	if ctx.Bool("tls") {
-		opts = append(opts, blackbird.WithTLS)
+		opts = append(opts, radiant.WithTLS)
 	}
 
 	if err := client.AddServer(host, opts...); err != nil {

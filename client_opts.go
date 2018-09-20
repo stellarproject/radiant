@@ -1,12 +1,12 @@
-package blackbird
+package radiant
 
 import (
 	"context"
 	"fmt"
 	"time"
 
-	api "github.com/ehazlett/blackbird/api/v1"
 	"github.com/gogo/protobuf/types"
+	api "github.com/stellarproject/radiant/api/v1"
 )
 
 type AddOpts func(ctx context.Context, srv *api.Server) error

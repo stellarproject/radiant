@@ -20,8 +20,8 @@ github.com/dnsimple/dnsimple-go v0.20.0/go.mod h1:0FYu4qVNv/UcfZPNwa9zi68IkggJu3
 github.com/dustin/go-humanize v0.0.0-20180713052910-9f541cc9db5d h1:lDrio3iIdNb0Gw9CgH7cQF+iuB5mOOjdJ9ERNJCBgb4=
 github.com/dustin/go-humanize v0.0.0-20180713052910-9f541cc9db5d/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/edeckers/auroradnsclient v1.0.3/go.mod h1:DfnGuII5MpjHzl0Vg5+2kNBr+95TU2w4wYv3IznTYOg=
-github.com/ehazlett/caddy v0.11.1-0.20180916025321-389f646b27c3 h1:4g+YnvBmDdMOQHF4YQsTaZg1NwNZlEL0CTv48liSjh8=
-github.com/ehazlett/caddy v0.11.1-0.20180916025321-389f646b27c3/go.mod h1:Fw5aFxRtGgP3nYP8vNPUhu8T/pttdFLPrcVR5TFxPM0=
+github.com/stellarproject/caddy v0.11.1-0.20180916025321-389f646b27c3 h1:4g+YnvBmDdMOQHF4YQsTaZg1NwNZlEL0CTv48liSjh8=
+github.com/stellarproject/caddy v0.11.1-0.20180916025321-389f646b27c3/go.mod h1:Fw5aFxRtGgP3nYP8vNPUhu8T/pttdFLPrcVR5TFxPM0=
 github.com/exoscale/egoscale v0.11.4/go.mod h1:Ee3U4ZjSDpbbEc9VkQ/jttUU8USE8Nv7L3YzVi03Y1U=
 github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 h1:BHsljHzVlRcyQhjrss6TZTdY2VfCqZPbv5k3iBFa2ZQ=
 github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568/go.mod h1:xEzjJPgXI435gkrCt3MPfRiAkVrwSbHsst4LCFVfpJc=

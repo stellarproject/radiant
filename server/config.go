@@ -7,14 +7,14 @@ import (
 	"text/template"
 	"time"
 
-	api "github.com/ehazlett/blackbird/api/v1"
 	"github.com/gogo/protobuf/types"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	api "github.com/stellarproject/radiant/api/v1"
 )
 
 const (
-	configTemplate = `# blackbird proxy config
+	configTemplate = `# radiant proxy config
 *:{{ $.HTTPPort }} {
     status 200 /healthz
 }
@@ -58,7 +58,7 @@ func duration(v *types.Duration) time.Duration {
 }
 
 func (s *Server) generateConfig() ([]byte, error) {
-	t := template.New("blackbird").Funcs(template.FuncMap{
+	t := template.New("radiant").Funcs(template.FuncMap{
 		"policyname": policyName,
 		"duration":   duration,
 	})

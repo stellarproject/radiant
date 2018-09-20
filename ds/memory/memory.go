@@ -1,6 +1,6 @@
 package memory
 
-import api "github.com/ehazlett/blackbird/api/v1"
+import api "github.com/stellarproject/radiant/api/v1"
 
 type Memory struct {
 	servers map[string]*api.Server

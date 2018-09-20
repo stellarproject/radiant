@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	api "github.com/ehazlett/blackbird/api/v1"
 	ptypes "github.com/gogo/protobuf/types"
 	"github.com/sirupsen/logrus"
+	api "github.com/stellarproject/radiant/api/v1"
 )
 
 func (s *Server) Reload(ctx context.Context, req *api.ReloadRequest) (*ptypes.Empty, error) {

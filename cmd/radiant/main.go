@@ -7,18 +7,18 @@ import (
 	"syscall"
 
 	"github.com/codegangsta/cli"
-	"github.com/ehazlett/blackbird"
-	"github.com/ehazlett/blackbird/ds/memory"
-	"github.com/ehazlett/blackbird/server"
-	"github.com/ehazlett/blackbird/version"
 	"github.com/sirupsen/logrus"
+	"github.com/stellarproject/radiant"
+	"github.com/stellarproject/radiant/ds/memory"
+	"github.com/stellarproject/radiant/server"
+	"github.com/stellarproject/radiant/version"
 )
 
 func main() {
 	app := cli.NewApp()
 	app.Name = version.Name
 	app.Version = version.BuildVersion()
-	app.Author = "@ehazlett"
+	app.Author = "@stellarproject"
 	app.Email = ""
 	app.Usage = version.Description
 	app.Flags = []cli.Flag{
@@ -29,7 +29,7 @@ func main() {
 		cli.StringFlag{
 			Name:  "grpc-addr, g",
 			Usage: "grpc listen address",
-			Value: "unix:///run/blackbird.sock",
+			Value: "unix:///run/radiant.sock",
 		},
 		cli.IntFlag{
 			Name:  "http-port",
@@ -57,7 +57,7 @@ func main() {
 }
 
 func start(ctx *cli.Context) error {
-	cfg := &blackbird.Config{
+	cfg := &radiant.Config{
 		GRPCAddr:  ctx.String("grpc-addr"),
 		HTTPPort:  ctx.Int("http-port"),
 		HTTPSPort: ctx.Int("https-port"),

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/ehazlett/blackbird/ds"
-	"github.com/ehazlett/blackbird/ds/memory"
+	"github.com/stellarproject/radiant/ds"
+	"github.com/stellarproject/radiant/ds/memory"
 )
 
 var (

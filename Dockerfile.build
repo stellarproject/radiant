@@ -17,7 +17,7 @@ RUN go get -v github.com/LK4D4/vndr \
     go get -v github.com/gogo/protobuf/protoc-gen-gogofast \
     go get -v github.com/stevvooe/protobuild \
     go get -v github.com/golang/lint/golint
-ENV APP blackbird
-ENV REPO ehazlett/$APP
+ENV APP radiant
+ENV REPO stellarproject/$APP
 COPY . /go/src/github.com/$REPO
 WORKDIR /go/src/github.com/$REPO

@@ -6,15 +6,15 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/ehazlett/blackbird"
-	api "github.com/ehazlett/blackbird/api/v1"
-	"github.com/ehazlett/blackbird/ds"
-	"github.com/ehazlett/blackbird/version"
 	ptypes "github.com/gogo/protobuf/types"
 	"github.com/mholt/caddy"
 	_ "github.com/mholt/caddy/caddyhttp"
 	"github.com/mholt/caddy/caddytls"
 	"github.com/sirupsen/logrus"
+	"github.com/stellarproject/radiant"
+	api "github.com/stellarproject/radiant/api/v1"
+	"github.com/stellarproject/radiant/ds"
+	"github.com/stellarproject/radiant/version"
 	"google.golang.org/grpc"
 )
 
@@ -23,13 +23,13 @@ var (
 )
 
 type Server struct {
-	config     *blackbird.Config
+	config     *radiant.Config
 	grpcServer *grpc.Server
 	instance   *caddy.Instance
 	datastore  ds.Datastore
 }
 
-func NewServer(cfg *blackbird.Config, datastore ds.Datastore) (*Server, error) {
+func NewServer(cfg *radiant.Config, datastore ds.Datastore) (*Server, error) {
 	grpcServer := grpc.NewServer()
 	srv := &Server{
 		config:     cfg,

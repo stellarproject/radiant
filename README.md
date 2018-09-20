@@ -1,9 +1,11 @@
-![Blackbird](docs/blackbird.png)
+![Radiant](radiant.png)
 
-# Blackbird
-Blackbird is a GRPC proxy service using [Caddy](https://caddyserver.com).
+[Photo by Jakub Novacek on Pexels](https://www.pexels.com/photo/time-lapse-photo-of-stars-on-night-924824/)
 
-Blackbird uses a datastore to store server info.  By default, there is a simple in-memory datastore.  You can implement whatever you want to integrate with external systems.
+# Radiant
+Radiant is a GRPC proxy service using [Caddy](https://caddyserver.com).
+
+Radiant uses a datastore to store server info.  By default, there is a simple in-memory datastore.  You can implement whatever you want to integrate with external systems.
 
 # Building
 Uses [dep](https://github.com/golang/dep) for dependencies.
@@ -18,15 +20,15 @@ To just build binaries:
 To start the server, run:
 
 ```
-$> blackbird
+$> radiant
 ```
 
 Or via code:
 
 ```go
 // create config
-cfg := &blackbird.Config{
-	GRPCAddr:  "unix:///run/blackbird.sock",
+cfg := &radiant.Config{
+	GRPCAddr:  "unix:///run/radiant.sock",
 	HTTPPort:  80,
 	HTTPSPort: 443,
 	Debug:     true,
@@ -46,17 +48,17 @@ This will start both the proxy and GRPC servers.
 There is a Go client available to assist in usage:
 
 ```go
-client, _ := blackbird.NewClient("unix:///run/blackbird.sock")
+client, _ := radiant.NewClient("unix:///run/radiant.sock")
 
 timeout := time.Second * 30
 upstreams := []string{
     "http://1.2.3.4",
     "http://5.6.7.8",
 }
-opts := []blackbird.AddOpts{
-    blackbird.WithUpstreams(upstreams...),
-    blackbird.WithTimeouts(timeout),
-    blackbird.WithTLS,
+opts := []radiant.AddOpts{
+    radiant.WithUpstreams(upstreams...),
+    radiant.WithTimeouts(timeout),
+    radiant.WithTLS,
 }
 
 // add the server

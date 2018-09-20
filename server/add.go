@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
-	api "github.com/ehazlett/blackbird/api/v1"
 	ptypes "github.com/gogo/protobuf/types"
+	api "github.com/stellarproject/radiant/api/v1"
 )
 
 func (s *Server) AddServer(ctx context.Context, req *api.AddServerRequest) (*ptypes.Empty, error) {

@@ -1,4 +1,4 @@
-package blackbird
+package radiant
 
 type Config struct {
 	GRPCAddr     string
