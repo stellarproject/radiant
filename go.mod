@@ -12,4 +12,4 @@ require (
 	google.golang.org/grpc v0.0.0-20180914155713-f2aaa9bf7445
 )
 
-replace github.com/mholt/caddy => github.com/stellarproject/caddy v0.11.1-0.20180916025321-389f646b27c3
+replace github.com/mholt/caddy => github.com/ehazlett/caddy v0.11.1-0.20180916025321-389f646b27c3
