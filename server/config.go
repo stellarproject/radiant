@@ -23,7 +23,8 @@ const (
     proxy {{ $server.Path }} { {{ if ne $server.Preset "" }}
 	{{ $server.Preset }}{{ end }}
 	policy {{policyname $server.Policy }}
-	try_duration 1s
+	try_duration 5s
+	fail_timeout 2s
 	{{ range $upstream := $server.Upstreams }}upstream {{ $upstream }}
 	{{ end }}
     }
